@@ -15,7 +15,10 @@ permissions:
 
 jobs:
 
+  # =====================================
   # JOB 1: TERRAFORM VALIDATION
+  # =====================================
+
   terraform-validation:
     name: Terraform Validation
     runs-on: ubuntu-latest
@@ -37,7 +40,10 @@ jobs:
         run: terraform validate
 
 
+  # =====================================
   # JOB 2: TFLINT
+  # =====================================
+
   terraform-lint:
     name: Terraform Lint - TFLint
     runs-on: ubuntu-latest
@@ -59,7 +65,10 @@ jobs:
         run: tflint --recursive
 
 
+  # =====================================
   # JOB 3: CHECKOV SECURITY SCAN
+  # =====================================
+
   terraform-security:
     name: Terraform Security - Checkov
     runs-on: ubuntu-latest
@@ -73,3 +82,25 @@ jobs:
 
       - name: Run Checkov Scan
         run: checkov -d . --framework terraform
+
+
+  # =====================================
+  # JOB 4: TERRASCAN SECURITY SCAN
+  # =====================================
+
+  terrascan:
+    name: Terraform Security - Terrascan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Terrascan
+        uses: tenable/terrascan-action@main
+        with:
+          iac_type: terraform
+          iac_version: v14
+          policy_type: aws
+          only_warn: false
+          sarif_upload: false
